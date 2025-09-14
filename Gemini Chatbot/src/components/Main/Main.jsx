@@ -6,7 +6,13 @@ const Main = () => {
   return (
     <div className='main'>
       <div className="nav">
-        <p>Gemini</p>
+        <p className='Gemini'>Gemini</p>
+        <div className="nav-link">
+        <p>About Gemini</p>
+        <p>Gemini App</p>
+        <p>Subscriptions</p>
+        <p>For Business</p>
+      </div>
         <img src={assets.user_icon} alt="" />
       </div>
       <div className="main-container">
@@ -34,7 +40,7 @@ const Main = () => {
         </div>
         <div className="main-bottom">
           <div className="search-box">
-            <input type="text" placeholder='Enter a prompt here' />
+            <input type="text" placeholder='Ask Gemini' />
             <div>
               <img src={assets.gallery_icon} alt="" />
               <img src={assets.mic_icon} alt="" />
