@@ -22,5 +22,4 @@ async function runChat(prompt) {
   }
 }
 
-// ✅ Export function
 export default runChat;
