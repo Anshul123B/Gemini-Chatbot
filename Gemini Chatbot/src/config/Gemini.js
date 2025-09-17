@@ -1,20 +1,16 @@
-// const apiKey = "AIzaSyBt-ujPmzrlFyVEVYm0koVx40HmbChzgDM";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-import { GoogleGenAI } from '@google/genai';
+const genAI = new GoogleGenerativeAI("AIzaSyBt-ujPmzrlFyVEVYm0koVx40HmbChzgDM");
 
-// ✅ Initialize Gemini with API key
-const ai = new GoogleGenAI({
-  apiKey: "AIzaSyBt-ujPmzrlFyVEVYm0koVx40HmbChzgDM",
-});
+// Try with a different model name
+const modelName = "gemini-1.5-flash"; // or use the model you find from listModels()
 
-const model = "gemini-2.5-flash"; // text model for chat
-
-// ✅ Async function for chat
 async function runChat(prompt) {
   try {
-    const chat = ai.getGenerativeModel({ model }).startChat();
-    const result = await chat.sendMessage(prompt);
-    const text = result.response.text();
+    const model = genAI.getGenerativeModel({ model: modelName });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
     return text;
   } catch (err) {
     console.error("Error:", err);
