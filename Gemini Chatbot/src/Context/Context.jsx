@@ -11,6 +11,7 @@ const ContextProvider = (props) => {
   const [resultData, setResultData] = useState("");
 
   const onSent = async (prompt) => {
+
     try {
       setLoading(true);
       setResultData(""); // clear previous
@@ -21,10 +22,10 @@ const ContextProvider = (props) => {
       setResultData(response);
     } catch (error) {
       console.error("Error in onSent:", error);
-      setResultData("❌ Error: Could not get response from Gemini.");
+      setResultData("Error: Could not get response from Gemini.");
     } finally {
       setLoading(false);
-      setInput(""); // clear input after send
+      setInput("");// clear input after send
     }
   };
 

@@ -72,12 +72,19 @@ const Main = () => {
 
           {/* Result Section */}
           <div className="result">
-            {loading && <p>Loading...</p>}
+            {recentPrompt && (
+              <div>
+                {recentPrompt}
+              </div>
+            )}
             {!loading && resultData && (() => {
-              console.log("Gemini response:", resultData); le
-              return null;
+              console.log("You:", recentPrompt);       
+              console.log("Gemini:", resultData);     
+              return null; 
             })()}
           </div>
+
+
 
 
           <p className="bottom-info">
