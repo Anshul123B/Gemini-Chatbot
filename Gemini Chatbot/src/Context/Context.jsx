@@ -12,6 +12,7 @@ const ContextProvider = (props) => {
 
   const onSent = async (prompt) => {
 
+
     try {
       setLoading(true);
       setResultData(""); // clear previous
