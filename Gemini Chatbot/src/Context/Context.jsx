@@ -5,41 +5,40 @@ export const Context = createContext();
 
 const ContextProvider = (props) => {
   const [input, setInput] = useState("");
-  const [recentPrompt, setRecentPrompt] = useState("");
-  const [prevPrompt, setPrevPrompt] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]); // NEW state
   const [loading, setLoading] = useState(false);
-  const [resultData, setResultData] = useState("");
 
   const onSent = async (prompt) => {
+    const query = prompt || input;
+    if (!query.trim()) return;
 
+    // Add user message to chat history
+    setChatHistory((prev) => [...prev, { role: "user", text: query }]);
+    setInput(""); // clear input box
 
     try {
       setLoading(true);
-      setResultData(""); // clear previous
-      const query = prompt || input;
-      setRecentPrompt(query);
-
       const response = await runChat(query);
-      setResultData(response);
+
+      // Add Gemini response
+      setChatHistory((prev) => [...prev, { role: "gemini", text: response }]);
     } catch (error) {
       console.error("Error in onSent:", error);
-      setResultData("Error: Could not get response from Gemini.");
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "gemini", text: "Error: Could not get response from Gemini." },
+      ]);
     } finally {
       setLoading(false);
-      setInput("");// clear input after send
     }
   };
 
   const contextValue = {
-    prevPrompt,
-    setPrevPrompt,
     onSent,
-    setRecentPrompt,
-    recentPrompt,
-    loading,
-    resultData,
+    chatHistory,
     input,
     setInput,
+    loading,
   };
 
   return (

@@ -116,3 +116,38 @@
     text-align: center;
     font-weight: 300;
 }
+.chat-area {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-bubble {
+  max-width: 60%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.chat-bubble.user {
+  align-self: flex-end;
+  background-color: #3b82f6; 
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.gemini {
+  align-self: flex-start;
+  background-color: #e5e7eb;
+  color: black;
+  border-bottom-left-radius: 4px;
+}
+
+.loading {
+  font-style: italic;
+  color: gray;
+  padding: 10px;
+}
