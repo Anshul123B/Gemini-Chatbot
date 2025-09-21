@@ -6,7 +6,7 @@ import { Context } from "../../Context/Context";
 const Main = () => {
   const {
     onSent,
-    chatHistory,  // NEW: array of { role: "user"|"gemini", text: string }
+    chatHistory,
     input,
     setInput,
     loading,
@@ -43,14 +43,22 @@ const Main = () => {
               <p>How can I help you today?</p>
             </div>
           ) : (
-            chatHistory.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat-bubble ${msg.role === "user" ? "user" : "gemini"}`}
-              >
-                {msg.text}
-              </div>
-            ))
+            chatHistory.map((msg, index) =>
+              msg.role === "user" ? (
+                <div key={index} className="chat-bubble user">
+                  {msg.text}
+                </div>
+              ) : (
+                <div key={index} className="chat-bubble gemini">
+                  <img
+                    src={assets.gemini_icon}
+                    alt="Gemini"
+                    className="gemini-icon"
+                  />
+                  <p>{msg.text}</p>
+                </div>
+              )
+            )
           )}
           {loading && <p className="loading">Gemini is thinking...</p>}
         </div>
