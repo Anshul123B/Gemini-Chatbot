@@ -43,24 +43,34 @@ const Main = () => {
               <p>How can I help you today?</p>
             </div>
           ) : (
-            chatHistory.map((msg, index) =>
-              msg.role === "user" ? (
-                <div key={index} className="chat-bubble user">
-                  {msg.text}
-                </div>
-              ) : (
-                <div key={index} className="chat-bubble gemini">
+            chatHistory.map((msg, index) => (
+              <div
+                key={index}
+                className={`chat-bubble ${msg.role === "user" ? "user" : "gemini"}`}
+              >
+                {msg.role === "gemini" && (
                   <img
                     src={assets.gemini_icon}
                     alt="Gemini"
                     className="gemini-icon"
                   />
-                  <p>{msg.text}</p>
-                </div>
-              )
-            )
+                )}
+                <span>{msg.text}</span>
+              </div>
+            ))
           )}
-          {loading && <p className="loading">Gemini is thinking...</p>}
+
+          {/* Loading State */}
+          {loading && (
+            <div className="chat-bubble gemini">
+              <img
+                src={assets.gemini_icon}
+                alt="Gemini"
+                className="gemini-icon"
+              />
+              <span>Gemini is thinking...</span>
+            </div>
+          )}
         </div>
 
         {/* Input */}
@@ -71,7 +81,13 @@ const Main = () => {
               placeholder="Ask Gemini"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && input.trim() !== "") {
+                  onSent();
+                }
+              }}
             />
+
             <div>
               <img src={assets.gallery_icon} alt="Gallery" />
               <img src={assets.mic_icon} alt="Mic" />
