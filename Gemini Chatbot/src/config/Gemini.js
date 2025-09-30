@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI("AIzaSyBt-ujPmzrlFyVEVYm0koVx40HmbChzgDM");
 
 // Try with a different model name
-const modelName = "gemini-1.5-flash"; // or use the model you find from listModels()
+const modelName = "gemini-2.5-flash"; 
 
 async function runChat(prompt) {
   try {
