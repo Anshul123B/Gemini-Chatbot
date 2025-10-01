@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Main.css";
 import { assets } from "../../assets/assets";
 import { Context } from "../../Context/Context";
@@ -12,13 +12,36 @@ const Main = () => {
     loading,
   } = useContext(Context);
 
-  // Log chat history to console
+  const [displayedText, setDisplayedText] = useState("");
+  const [typingIndex, setTypingIndex] = useState(0);
+
+  // Typing effect for last Gemini message
   useEffect(() => {
     if (chatHistory.length > 0) {
       const last = chatHistory[chatHistory.length - 1];
-      console.log(`${last.role === "user" ? "You" : "Gemini"}:`, last.text);
+      if (last.role === "gemini") {
+        setDisplayedText(""); // reset
+        setTypingIndex(0);
+        let i = 0;
+        const interval = setInterval(() => {
+          if (i < last.text.length) {
+            setDisplayedText((prev) => prev + last.text[i]);
+            i++;
+          } else {
+            clearInterval(interval);
+          }
+        }, 10); // speed (ms per character)
+        return () => clearInterval(interval);
+      }
     }
   }, [chatHistory]);
+
+  // Handle send with Enter key
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      onSent();
+    }
+  };
 
   return (
     <div className="main">
@@ -43,32 +66,35 @@ const Main = () => {
               <p>How can I help you today?</p>
             </div>
           ) : (
-            chatHistory.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat-bubble ${msg.role === "user" ? "user" : "gemini"}`}
-              >
-                {msg.role === "gemini" && (
-                  <img
-                    src={assets.gemini_icon}
-                    alt="Gemini"
-                    className="gemini-icon"
-                  />
-                )}
-                <span>{msg.text}</span>
-              </div>
-            ))
+            chatHistory.map((msg, index) => {
+              if (index === chatHistory.length - 1 && msg.role === "gemini") {
+                // Typing effect for last Gemini message
+                return (
+                  <div key={index} className="chat-bubble gemini">
+                    <img src={assets.gemini_icon} alt="Gemini" className="gemini-icon" />
+                    <span>{displayedText}</span>
+                  </div>
+                );
+              } else {
+                // Normal render for other messages
+                return (
+                  <div
+                    key={index}
+                    className={`chat-bubble ${msg.role === "user" ? "user" : "gemini"}`}
+                  >
+                    {msg.role === "gemini" && (
+                      <img src={assets.gemini_icon} alt="Gemini" className="gemini-icon" />
+                    )}
+                    <span>{msg.text}</span>
+                  </div>
+                );
+              }
+            })
           )}
-
-          {/* Loading State */}
           {loading && (
             <div className="chat-bubble gemini">
-              <img
-                src={assets.gemini_icon}
-                alt="Gemini"
-                className="gemini-icon"
-              />
-              <span>Gemini is thinking...</span>
+              <img src={assets.gemini_icon} alt="Gemini" className="gemini-icon" />
+              <span className="loading">Gemini is thinking...</span>
             </div>
           )}
         </div>
@@ -81,21 +107,13 @@ const Main = () => {
               placeholder="Ask Gemini"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && input.trim() !== "") {
-                  onSent();
-                }
-              }}
+              onKeyDown={handleKeyDown}
             />
-
+            
             <div>
               <img src={assets.gallery_icon} alt="Gallery" />
               <img src={assets.mic_icon} alt="Mic" />
-              <img
-                onClick={() => onSent()}
-                src={assets.send_icon}
-                alt="Send"
-              />
+              <img onClick={() => onSent()} src={assets.send_icon} alt="Send" />
             </div>
           </div>
 
